@@ -2,6 +2,7 @@
 @author: Maziar Raissi
 """
 
+#下面这行代码，是为了把自己编写的代码文件当作一共模块导入，这里是把Utilities文件夹中的plotting.py文件当作python的模块导入，对应的是下面的from plotting import newfig, savefig。路径要随着不同设备的系统做相应的修改
 import sys #导入sys模块。sys模块提供了一些变量和函数，用于与 Python解释器进行交互和访问。例如，sys.path 是一个 Python 在导入模块时会查找的路径列表，sys.argv 是一个包含命令行参数的列表，sys.exit() 函数可以用于退出 Python 程序。导入 sys 模块后，你就可以在你的程序中使用这些变量和函数了。
 sys.path.insert(0, 'C:/Users/cheny/Documents/GitHub/PINNs/Utilities/') #在 Python的sys.path列表中插入一个新的路径。sys.path是一个 Python 在导入模块时会查找的路径列表。新的路径'../../Utilities/'相对于当前脚本的路径。当你尝试导入一个模块时，Python 会在 sys.path 列表中的路径下查找这个模块。通过在列表开始位置插入一个路径，你可以让 Python 优先在这个路径下查找模块。这在你需要导入自定义模块或者不在 Python 标准库中的模块时非常有用。
 
@@ -277,7 +278,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     N_f = 20000
     #定义一个列表layers，其中包含了神经网络的层数和每一层的神经元数量
     layers = [2, 100, 100, 100, 100, 2]
-    #读取名为NLS.mat的Matlab文件，文件中的数据存储在data变量中    
+    #读取名为NLS.mat的Matlab文件，文件中的数据存储在data变量中。这里的路径也要随着设备的情况修改    
     data = scipy.io.loadmat('C:/Users/cheny/Documents/GitHub/PINNs/main/Data/NLS.mat')
     #从data字典中取出变量tt和x的值，并转换为一维数组（flatten方法），最后tongg[:,None]将一维数组转换为二维数组
     t = data['tt'].flatten()[:,None]
@@ -427,6 +428,6 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     ax.set_ylim([-0.1,5.1])    #第三个子图的y轴范围是-0.1到5.1
     ax.set_title('$t = %.2f$' % (t[125]), fontsize = 10)    #设置第三个子图的标题，标题随着t的变化而变化，字体大小为10
     
-    savefig('C:/Users/cheny/Documents/GitHub/PINNs/main/continuous_time_inference (Schrodinger)/figures/NLS')  #用来保存图形，将当前图形保存为名为‘NLS’的文件，保存到位置是当前目录下的‘figures’文件夹；
+    savefig('C:/Users/cheny/Documents/GitHub/PINNs/main/continuous_time_inference (Schrodinger)/figures/NLS')  #用来保存图形，将当前图形保存为名为‘NLS’的文件，保存到位置是当前目录下的‘figures’文件夹；这里的路径也要随着设备的情况修改。注意这边来必须提前建立好figures文件夹，否则会报错
     #在文件路径中，"."和".."有特殊的含义。"."表示当前目录，".."表示上一级目录。例如，如果你在"/home/user/documents"目录下，"."就表示"/home/user/documents"，而".."表示"/home/user"。"当前文件夹"通常指的是正在执行的脚本所在的文件夹。在Python中，你可以使用os.getcwd()来获取当前工作目录。
     

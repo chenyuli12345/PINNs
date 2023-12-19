@@ -86,25 +86,25 @@ def savefig(filename, crop = True):
         plt.savefig('{}.eps'.format(filename))
 
 
-# Simple plot,一段简单的示例，用于绘制指数移动平均（EMA）图
-fig, ax  = newfig(1.0)
+# # Simple plot,一段简单的示例，用于绘制指数移动平均（EMA）图
+# fig, ax  = newfig(1.0)
 
-def ema(y, a):  #定义了一个名为ema的函数用于计算指数移动平均。接受两个参数：y是一个包含数据的列表，a是平滑因子。
-   s = []
-   s.append(y[0])  #函数首先将y的第一个元素添加到结果列表s中
-   for t in range(1, len(y)):
-       s.append(a*y[t]+(1-a)*s[t-1]) #对y的剩余元素进行迭代，每次迭代都计算，并将结果添加到s中
-   return np.array(s) #最后，函数返回s的numpy数组形式
+# def ema(y, a):  #定义了一个名为ema的函数用于计算指数移动平均。接受两个参数：y是一个包含数据的列表，a是平滑因子。
+#    s = []
+#    s.append(y[0])  #函数首先将y的第一个元素添加到结果列表s中
+#    for t in range(1, len(y)):
+#        s.append(a*y[t]+(1-a)*s[t-1]) #对y的剩余元素进行迭代，每次迭代都计算，并将结果添加到s中
+#    return np.array(s) #最后，函数返回s的numpy数组形式
    
-y = [0]*200 #创建了一个名为y的列表，该列表前200个元素为0
-#这行代码使用了列表的`extend`方法。用于将一个列表（或任何可迭代对象）的所有元素添加到当前列表的末尾。
-#这里`[20]*(1000-len(y))` 创建了一个新的列表，这个列表的长度为 `1000-len(y)`，所有元素都是 `20`。然后，这个新列表的所有元素都被添加到 `y` 的末尾
-y.extend([20]*(1000-len(y)))  #将y的后800个元素设置为20
-s = ema(y, 0.01) #使用上面定义的ema函数来计算y的指数移动平均，平滑因子为0.01
+# y = [0]*200 #创建了一个名为y的列表，该列表前200个元素为0
+# #这行代码使用了列表的`extend`方法。用于将一个列表（或任何可迭代对象）的所有元素添加到当前列表的末尾。
+# #这里`[20]*(1000-len(y))` 创建了一个新的列表，这个列表的长度为 `1000-len(y)`，所有元素都是 `20`。然后，这个新列表的所有元素都被添加到 `y` 的末尾
+# y.extend([20]*(1000-len(y)))  #将y的后800个元素设置为20
+# s = ema(y, 0.01) #使用上面定义的ema函数来计算y的指数移动平均，平滑因子为0.01
 
-#下面的代码中，`ax` 是一个 `AxesSubplot` 对象，之前它是通过调用`fig.add_subplot(111)` 创建的。`AxesSubplot` 对象代表了图形中的一个子图。
-ax.plot(s) # ax.plot(s) 在子图ax上绘制一个线图，线图的数据来源于's'。然后，使用 ax.set_xlabel('X Label') 和 ax.set_ylabel('EMA') 设置了 x 轴和 y 轴的标签
-ax.set_xlabel('X Label') #设置子图ax的x轴标签为'X Label'
-ax.set_ylabel('EMA') #设置子图ax的y轴标签为'EMA'
+# #下面的代码中，`ax` 是一个 `AxesSubplot` 对象，之前它是通过调用`fig.add_subplot(111)` 创建的。`AxesSubplot` 对象代表了图形中的一个子图。
+# ax.plot(s) # ax.plot(s) 在子图ax上绘制一个线图，线图的数据来源于's'。然后，使用 ax.set_xlabel('X Label') 和 ax.set_ylabel('EMA') 设置了 x 轴和 y 轴的标签
+# ax.set_xlabel('X Label') #设置子图ax的x轴标签为'X Label'
+# ax.set_ylabel('EMA') #设置子图ax的y轴标签为'EMA'
 
-savefig('ema') #将图形保存为文件，文件名为'ema'，默认情况下，文件会被保存在当前的工作目录
+# savefig('ema') #将图形保存为文件，文件名为'ema'，默认情况下，文件会被保存在当前的工作目录

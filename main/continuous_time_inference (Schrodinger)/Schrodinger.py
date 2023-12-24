@@ -132,7 +132,7 @@ class PhysicsInformedNN:
 
 
         # tf session，使用TensorFlow库创建了一个会话self.sess，是用于执行计算图的环境。
-
+    
         #使用tf.Session创建了一个名为tf.sess的会话。接受一个config参数，这是一个tf.ConfigProto对象，用于设置会话的配置选项。这里设置了两个选项：
               #allow_soft_placement：如果设置为True，那么当某些操作无法在GPU上执行时，TensorFlow会自动将它们放在CPU上执行；
               #log_device_placement：如果设置为True，那么在日志中会记录每个节点被安排在哪个设备上执行
@@ -231,6 +231,10 @@ class PhysicsInformedNN:
                    self.x_ub_tf:self.x_ub,self.t_ub_tf:self.t_ub,
                    self.x_f_tf:self.x_f,self.t_f_tf:self.t_f}
         #time.time()函数用于获取当前时间并赋值给start_time
+
+        #writer=tf.summary.FileWriter('logs/',sess.graph) #tensorboard可视化
+
+
         start_time = time.time()
         for it in range(nIter):  #进行nIter次训练迭代
             #每次迭代时传入输入数据，并执行Adam优化器的训练操作
@@ -320,7 +324,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     #获取当前时间并赋值给start_time          
     start_time = time.time()       
     #训练模型50000次         
-    model.train(50000)
+    model.train(10)
     #获取当前时间并减去start_time，得到训练时间并赋值给elapsed
     elapsed = time.time() - start_time                
     #打印训练所需时间
@@ -432,4 +436,4 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     
     savefig('C:/Users/cheny/Documents/GitHub/PINNs/main/continuous_time_inference (Schrodinger)/figures/NLS')  #用来保存图形，将当前图形保存为名为‘NLS’的文件，保存到位置是当前目录下的‘figures’文件夹；这里的路径也要随着设备的情况修改。注意这边来必须提前建立好figures文件夹，否则会报错
     #在文件路径中，"."和".."有特殊的含义。"."表示当前目录，".."表示上一级目录。例如，如果你在"/home/user/documents"目录下，"."就表示"/home/user/documents"，而".."表示"/home/user"。"当前文件夹"通常指的是正在执行的脚本所在的文件夹。在Python中，你可以使用os.getcwd()来获取当前工作目录。
-    
+    print('End')

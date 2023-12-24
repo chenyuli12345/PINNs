@@ -37,9 +37,9 @@ class PhysicsInformedNN:
         
         
         #`numpy.concatenate`是一个用于数组拼接的函数。它可以将多个数组沿指定的轴拼接在一起，形成一个新的数组：numpy.concatenate((a1,a2, ...), axis=0)其中，`a1,a2, ...`是需要拼接的数组（只能接受数组或序列类型的参数，且参数形状必须相同），可以是多个。`axis`参数用于指定拼接的轴向，`axis=0`表示沿着第一个轴（即行）进行拼接，不指定`axis`参数默认值是0。
-        X0 = np.concatenate((x0, 0*x0), 1) # [x0, 0],将x0和0*x0两个数组在第二个维度（即列）上进行了合并。0*x0会生成一个与x0形状相同，但所有元素都为0的数组。因此，X0的结果是一个新的二维数组，其中第一列是x0的值，第二列全为0
-        X_lb = np.concatenate((0*tb + lb[0], tb), 1) # [lb[0], tb],将0*tb+lb[0]和tb两个数组在第二个维度（即列）上进行了合并。0*tb+lb[0]会生成一个与tb形状相同，但所有元素都为lb[0]的数组。因此，X_lb的结果是一个新的二维数组，其中第一列全为lb[0]的值，第二列是tb的值。
-        X_ub = np.concatenate((0*tb + ub[0], tb), 1) # [ub[0], tb],同上生成一个与tb形状相同，但所有元素都为ub[0]的数组。因此，X_ub的结果是一个新的二维数组，其中第一列全为ub[0]的值，第二列是tb的值
+        X0 = np.concatenate((x0,0*x0), 1) # [x0, 0],将x0和0*x0两个数组在第二个维度（即列）上进行了合并。0*x0会生成一个与x0形状相同，但所有元素都为0的数组。因此，X0的结果是一个新的二维数组，其中第一列是x0的值，第二列全为0
+        X_lb = np.concatenate((0*tb+lb[0],tb), 1) # [lb[0], tb],将0*tb+lb[0]和tb两个数组在第二个维度（即列）上进行了合并。0*tb+lb[0]会生成一个与tb形状相同，但所有元素都为lb[0]的数组。因此，X_lb的结果是一个新的二维数组，其中第一列全为lb[0]的值，第二列是tb的值。
+        X_ub = np.concatenate((0*tb+ub[0],tb), 1) # [ub[0], tb],同上生成一个与tb形状相同，但所有元素都为ub[0]的数组。因此，X_ub的结果是一个新的二维数组，其中第一列全为ub[0]的值，第二列是tb的值
         
         #Python使用self关键字来表示类的实例。当在类的方法中定义一个变量时，例如lb和ub，这些变量只在该方法内部可见，也就是说它们的作用域仅限于该方法。当方法执行完毕后，这些变量就会被销毁，无法在其他方法中访问它们。但如果希望在类的其他方法中也能访问这些变量就需要将它们保存为类的实例属性。这就是self.lb和self.ub的作用。
             #通过将lb和ub赋值给self.lb和self.ub，就可以在类的其他方法中通过self.lb和self.ub来访问这些值。总的来说，self.lb和self.ub是类的实例属性，它们的作用域是整个类，而不仅仅是定义它们的方法。
@@ -93,6 +93,7 @@ class PhysicsInformedNN:
 
 
 
+
         # Loss，这里是使用TensorFlow库计算损失函数的部分，训练目标是最小化损失函数，这里的损失函数由八部分组成，分别是初始条件、边界条件、微分方程两边的残差。每一部分都是预测值与真实值之间的差的平方的均值（均方误差）
         #tf.reduce_mean是TensorFlow库中的一个函数，用于计算张量的均值。它接受一个参数，即张量，可以是一个一维数组，也可以是一个多维数组。它会返回一个标量，即这个张量的均值。
         #tf.square是TensorFlow库中的一个函数，用于计算张量的平方。它接受一个参数，即张量，可以是一个一维数组，也可以是一个多维数组。它会返回一个与输入张量形状相同的张量，其中每个元素都是输入张量对应元素的平方。
@@ -131,7 +132,7 @@ class PhysicsInformedNN:
 
 
         # tf session，使用TensorFlow库创建了一个会话self.sess，是用于执行计算图的环境。
-    
+
         #使用tf.Session创建了一个名为tf.sess的会话。接受一个config参数，这是一个tf.ConfigProto对象，用于设置会话的配置选项。这里设置了两个选项：
               #allow_soft_placement：如果设置为True，那么当某些操作无法在GPU上执行时，TensorFlow会自动将它们放在CPU上执行；
               #log_device_placement：如果设置为True，那么在日志中会记录每个节点被安排在哪个设备上执行
@@ -158,64 +159,65 @@ class PhysicsInformedNN:
         return weights, biases
 
 
+ 
 
     #定义了一个名为xavier_init的函数/方法，用于初始化神经网络的权重(在神经网络参数初始化中实现，见上面)。这个函数使用了Xavier初始化方法，这是一种常用的权重初始化方法，可以帮助我们在训练深度神经网络时保持每一层的激活值的分布相对稳定。
     def xavier_init(self, size):   #接受一个参数size
         in_dim = size[0]  #输入维度是size的行数
         out_dim = size[1]     #输出维度是size的列数
-        xavier_stddev = np.sqrt(2/(in_dim + out_dim))   #计算标准差
-           #tf.truncated_normal(shape, mean=0.0, stddev=1.0, dtype=tf.float32, seed=None, name=None)用于生成一个截断的正态分布，接受六个参数，第一个参数shape是一个列表，表示生成张量的形状；第二个参数mean是一个标量，表示正态分布的均值；第三个参数stddev是一个标量，表示正态分布的标准差；第四个参数dtype是生成张量的数据类型；第五个参数seed是一个整数，用于设置随机数种子；第六个参数name是生成张量的名称。
+        xavier_stddev = np.sqrt(2/(in_dim+out_dim))   #计算标准差
         return tf.Variable(tf.truncated_normal([in_dim, out_dim], stddev=xavier_stddev), dtype=tf.float32) #返回一个变量，类型为32位浮点，初始值为截断正态分布，标准差为xavier_stddev，形状为[in_dim, out_dim]，其中in_dim和out_dim分别是输入维度和输出维度
     
     #定义了一个名为neural_net的函数/方法，用于实现神经网络的输出。这个方法接受三个参数，分别是X，weights和biases，其中X是输入数据，weights和biases是神经网络的权重和偏置。
-    def neural_net(self, X, weights, biases):
-        num_layers = len(weights) + 1 #计算神经网络的层数并返回到num_layers，其值位权重矩阵的长度（行数）加1
+    def neural_net(self,X,weights,biases):
+        num_layers=len(weights)+1 #计算神经网络的层数并返回到num_layers，其值位权重矩阵的长度（行数）加1
         
-        H = 2.0*(X-self.lb)/(self.ub-self.lb)-1.0 #这里H是X经过归一化处理后的结果，将X映射到了[-1,1]区间内
+        H=2.0*(X-self.lb)/(self.ub-self.lb)-1.0 #这里H是X经过归一化处理后的结果，将X映射到了[-1,1]区间内
         for l in range(0,num_layers-2): #使用循环遍历神经网络的每一层（除了输出层）
-            W = weights[l] #获取当前层的权重
-            b = biases[l] #获取当前层的偏置
-            H = tf.tanh(tf.add(tf.matmul(H, W), b)) #计算当前层的输出，使用了tf.matmul函数计算矩阵乘法，tf.add函数计算矩阵加法，tf.tanh函数计算双曲正切函数
-        W = weights[-1] #获取输出层的权重,这里的weights[-1]表示列表weights的最后一个元素
-        b = biases[-1] #获取输出层的偏置
-        Y = tf.add(tf.matmul(H, W), b)  #计算输出层的输出H*W+b
+            W=weights[l] #获取当前层的权重
+            b=biases[l] #获取当前层的偏置
+            H=tf.tanh(tf.add(tf.matmul(H,W),b)) #计算当前层的输出，使用了tf.matmul函数计算矩阵乘法，tf.add函数计算矩阵加法，tf.tanh函数计算双曲正切函数
+        W=weights[-1] #获取输出层的权重,这里的weights[-1]表示列表weights的最后一个元素
+        b=biases[-1] #获取输出层的偏置
+        Y=tf.add(tf.matmul(H,W),b)  #计算输出层的输出H*W+b
         return Y #返回输出层的输出Y
     
+
 
     #定义了一个名为net_uv的函数/方法，用于计算神经网络的输出以及输出关于输入x的梯度。这个方法接受两个参数，分别是x和t，其中x是输入数据，t是时间数据。最后返回神经网络的两个输出以及输出它们关于输入x的梯度。
     def net_uv(self,x,t):
             #tf.concat(values, axis)，用于将多个张量在指定的维度上进行拼接，接受两个参数，第一个参数values是一个列表，表示需要拼接的张量；第二个参数axis是一个整数，表示拼接的维度。
-        X = tf.concat([x,t],1)   #将输入的两个参数x和t在第二个维度（列）上进行拼接，形成一个新的张量X
+        X=tf.concat([x,t],1)   #将输入的两个参数x和t在第二个维度（列）上进行拼接，形成一个新的张量X
         #调用之前定义的neural_net函数，根据两个参数权重和偏置，以及上一步得到的张量X，计算神经网络的输出uv
-        uv = self.neural_net(X, self.weights, self.biases)
+        uv=self.neural_net(X,self.weights,self.biases)
         #将uv（是一个二维张量）的第一列赋值给u，第二列赋值给v
-        u = uv[:,0:1]
-        v = uv[:,1:2]
+        u=uv[:,0:1]
+        v=uv[:,1:2]
         #分别计算u和v关于x的梯度，使用了tf.gradients函数，它接受两个参数，第一个参数ys是一个张量，表示需要求导的张量；第二个参数xs是一个张量或张量列表，表示需要对哪些张量求导。
             #tf.gradients(ys, xs, grad_ys=None, name="gradients", colocate_gradients_with_ops=False, gate_gradients=False, aggregation_method=None)：第一个参数ys是一个张量，表示需要求导的张量；第二个参数xs是一个张量或张量列表，表示需要对哪些张量求导；
             #第三个参数表示一个与ys相同长度的张量列表，每个张量都是ys中对应张量的梯度，若为None则假设每个ys的梯度为1；其他参数用于控制梯度计算的细节，通常不需要修改
             #最后的输出是一个列表，列表中的每个元素都是一个张量，表示`ys`中对应元素关于`xs`中对应元素的梯度：若`ys`和`xs`都是长度为`n`的张量列表，那么`tf.gradients(ys,xs)`的输出就是一个长度为`n`的张量列表，其中第`i`个张量是`ys[i]`关于`xs[i]`的梯度；若`ys`是一个张量，`xs`是一个张量列表，那么`tf.gradients(ys, xs)`的输出就是一个长度与`xs`相同的张量列表，其中第`i`个张量是`ys`关于`xs[i]`的梯度。
-        u_x = tf.gradients(u,x)[0]  #计算u关于x的梯度
-        v_x = tf.gradients(v,x)[0]  #计算v关于x的梯度
-        return u, v, u_x, v_x
+        u_x=tf.gradients(u,x)[0]  #计算u关于x的梯度
+        v_x=tf.gradients(v,x)[0]  #计算v关于x的梯度
+        return u,v,u_x,v_x
     
 
 
     #定义了一个名为net_f_uv的函数/方法，用于计算f_u和f_v。这个方法接受两个参数，分别是x和t，其中x是输入数据，t是时间数据。最后返回计算得到的f_u和f_v。
     def net_f_uv(self, x, t):
-        u, v, u_x, v_x = self.net_uv(x,t) #调用上面的函数/方法，计算神经网络的输出（两个）以及输出关于输入x的梯度（两个）
-        u_t = tf.gradients(u,t)[0] #计算u关于t的梯度
-        u_xx = tf.gradients(u_x,x)[0] #计算u_x关于x的梯度，也就是u关于x的二阶导数
-        v_t = tf.gradients(v,t)[0] #计算v关于t的梯度
-        v_xx = tf.gradients(v_x,x)[0] #计算v_x关于x的梯度，也就是v关于x的二阶导数
+        u,v,u_x,v_x=self.net_uv(x,t) #调用上面的函数/方法，计算神经网络的输出（两个）以及输出关于输入x的梯度（两个）
+        u_t=tf.gradients(u,t)[0] #计算u关于t的梯度
+        u_xx=tf.gradients(u_x,x)[0] #计算u_x关于x的梯度，也就是u关于x的二阶导数
+        v_t=tf.gradients(v,t)[0] #计算v关于t的梯度
+        v_xx=tf.gradients(v_x,x)[0] #计算v_x关于x的梯度，也就是v关于x的二阶导数
         
         f_u=u_t+0.5*v_xx+(u**2+v**2)*v    #计算f_u,定义见论文
         f_v=v_t-0.5*u_xx-(u**2+v**2)*u   #计算f_v,定义见论文
         
-        return f_u, f_v
+        return f_u,f_v
     
-    def callback(self, loss):  #定义了一个名为callback的函数/方法，打印损失值
-        print('Loss:', loss)
+    def callback(self,loss):  #定义了一个名为callback的函数/方法，打印损失值
+        print('Loss:',loss)
 
 
     
@@ -223,16 +225,12 @@ class PhysicsInformedNN:
     def train(self, nIter):
         #创建一个名为tf_dict的字典，该字典将TensorFlow占位符映射到它们对应的数据。创建tf_dict的目的是为了在运行TensorFlow的计算图时，能够将数据传递给占位符。例如，当运行self.sess.run(self.train_op_Adam, tf_dict)时，tf_dict中的数据就会被传递给对应的占位符，然后在计算图中使用
             #字典语法：dict = {key1: value1, key2: value2, ...}：key1、key2等是字典的键，value1、value2等是对应的值（这里键是占位符，值是对应的数据）。
-        tf_dict = {self.x0_tf: self.x0, self.t0_tf: self.t0,
-                   self.u0_tf: self.u0, self.v0_tf: self.v0,
-                   self.x_lb_tf: self.x_lb, self.t_lb_tf: self.t_lb,
-                   self.x_ub_tf: self.x_ub, self.t_ub_tf: self.t_ub,
-                   self.x_f_tf: self.x_f, self.t_f_tf: self.t_f}
+        tf_dict = {self.x0_tf:self.x0,self.t0_tf:self.t0,
+                   self.u0_tf:self.u0,self.v0_tf:self.v0,
+                   self.x_lb_tf:self.x_lb,self.t_lb_tf:self.t_lb,
+                   self.x_ub_tf:self.x_ub,self.t_ub_tf:self.t_ub,
+                   self.x_f_tf:self.x_f,self.t_f_tf:self.t_f}
         #time.time()函数用于获取当前时间并赋值给start_time
-
-        #writer=tf.summary.FileWriter('logs/',sess.graph) #tensorboard可视化
-
-
         start_time = time.time()
         for it in range(nIter):  #进行nIter次训练迭代
             #每次迭代时传入输入数据，并执行Adam优化器的训练操作
@@ -249,7 +247,7 @@ class PhysicsInformedNN:
         #？？？
         self.optimizer.minimize(self.sess, 
                                 feed_dict = tf_dict,         
-                                fetches = [self.loss], 
+                                fetches = [self.loss],    
                                 loss_callback = self.callback)        
                                     
     #定义了一个名为predict的函数/方法，用于预测神经网络的输出。这个方法接受一个参数X_star，表示输入数据。最后返回预测的两个输出和两个输出的梯度。
@@ -273,7 +271,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     #设置噪声值为0 
     noise = 0.0        
     
-    # Doman bounds，定义两个一维数组lb和ub，问题域是一个二维空间，其中 x 的范围是 -5 到 5，t 的范围是 0 到 π/2
+    # Doman bounds，定义两个一维数组lb和ub，问题域是一个二维空间，其中 x 的范围是 -5 到 5，t 的范围是 0 到 π/2(竖着的)
     lb = np.array([-5.0, 0.0])
     ub = np.array([5.0, np.pi/2])
     #定义三个整数，分别表示初始条件点数量、边界条件点数量和在问题域内部的点的数量（这些点用于训练神经网络）
@@ -294,7 +292,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     #生成一个二位网络，X和T是输出的二维数组
     X, T = np.meshgrid(x,t)
     
-    X_star = np.hstack((X.flatten()[:,None], T.flatten()[:,None]))
+    X_star = np.hstack((X.flatten()[:,None], T.flatten()[:,None]))  #X_star是一个二维数组，其中第一列是X的展平，第二列是T的展平
     u_star = Exact_u.T.flatten()[:,None] #先对Exact_u进行转置，然后使用flatten方法将其转换为一维数组，最后使用[:,None]将其转换为二维数组
     v_star = Exact_v.T.flatten()[:,None] #同上，比如Exact_v是m*n二维数组，Exact_v.T是n*m二维数组，Exact_v.T.flatten()是一个长度为n*m的一维数组，Exact_v.T.flatten()[:,None]是一个(n*m)*1的三维数组
     h_star = Exact_h.T.flatten()[:,None]
@@ -303,7 +301,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
 
     ###########################
     
-    #从arange(数组x的行数)中随机选择N0个数，replace=False表示不允许重复选择，最后将这N0个数赋值给idx_x
+    #从0~数组x的行数(256)中随机选择N0个数，replace=False表示不允许重复选择，最后将这N0个数赋值给idx_x
     idx_x = np.random.choice(x.shape[0], N0, replace=False)
     #从x中选择N0个对应的行(idx_x对应的行)，最后将这N0行赋值给x0
     x0 = x[idx_x,:]
@@ -315,14 +313,14 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     #从t中选择N_b个对应的行(idx_t对应的行)，最后将这N_b行赋值给tb
     tb = t[idx_t,:]
     
-    X_f = lb + (ub-lb)*lhs(2, N_f)
+    X_f = lb + (ub-lb)*lhs(2, N_f) #lhs函数采用拉丁超采样方法，生成一个近似均匀分布的多维样本点集，返回的是一个形状为（$N_f$，2）的数组，每一行都是一个2维的样本点，所有样本点都在[0,1]范围内，并对该样本集进行缩放，把每个样本从[0,1]区间缩放到[lb,ub]区域内，即得到了指定范围内均匀分布的样本$X_f$。
 
     #创建PINN模型并输入各种参数        
     model = PhysicsInformedNN(x0, u0, v0, tb, X_f, layers, lb, ub)
     #获取当前时间并赋值给start_time          
     start_time = time.time()       
     #训练模型50000次         
-    model.train(10)
+    model.train(50000)
     #获取当前时间并减去start_time，得到训练时间并赋值给elapsed
     elapsed = time.time() - start_time                
     #打印训练所需时间
@@ -382,9 +380,9 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     
     line = np.linspace(x.min(), x.max(), 2)[:,None] #生成了一个包含2个等间距的数值的数组，这些数值在 x.min() 到 x.max() 之间。[:,None] 是一个索引操作，用于将一维数组转换为二维数组。
     #在ax上绘制三条虚线，第一个参数是虚线的x坐标，line是虚线y的坐标，第三个参数是虚线的样式，k表示黑色，--表示虚线，最后一个参数表示虚线的参数是1
-    ax.plot(t[75]*np.ones((2,1)), line, 'k--', linewidth = 1) 
-    ax.plot(t[100]*np.ones((2,1)), line, 'k--', linewidth = 1)
-    ax.plot(t[125]*np.ones((2,1)), line, 'k--', linewidth = 1)    
+    ax.plot(t[75]*np.ones((2,1)),line,'k--',linewidth=1) 
+    ax.plot(t[100]*np.ones((2,1)),line,'k--',linewidth=1)
+    ax.plot(t[125]*np.ones((2,1)),line,'k--',linewidth=1)    
     #设置ax子图的x轴的标签为t，y轴的标签为x。这里$t$和$x$是latex格式的文本，用于生成数学公式
     ax.set_xlabel('$t$')
     ax.set_ylabel('$x$')
@@ -405,15 +403,15 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     ax.set_xlabel('$x$')
     ax.set_ylabel('$|h(t,x)|$')    
     #设置子图的标题，几个子图标题随着t的变化而变化，字体大小为10
-    ax.set_title('$t = %.2f$' % (t[75]), fontsize = 10)
+    ax.set_title('$t=%.2f$' % (t[75]), fontsize = 10)
     ax.axis('square') #设置子图的纵横比，使得x轴和y轴的单位长度相等，形成一个正方形的区域
     ax.set_xlim([-5.1,5.1]) #第一个子图的x轴范围是-5.1到5.1
     ax.set_ylim([-0.1,5.1]) #第一个子图的y轴范围是-0.1到5.1
     
     ax = plt.subplot(gs1[0, 1]) #在gs1[0,1]指定的位置，也就是网格的第一行第二列，创建了一个子图，并将返回的axes对象赋值给ax。
     #绘制了两条线，一条表示精确值，一条表示预测值
-    ax.plot(x,Exact_h[:,100], 'b-', linewidth = 2, label = 'Exact')        #第一个参数表示x轴上的坐标；第二个参数表示y轴上的坐标；第三个参数b-表示蓝色的实线；linewidth表示线的宽度为2；label表示线的标签
-    ax.plot(x,H_pred[100,:], 'r--', linewidth = 2, label = 'Prediction')   #同上
+    ax.plot(x,Exact_h[:,100],'b-', linewidth = 2, label = 'Exact')        #第一个参数表示x轴上的坐标；第二个参数表示y轴上的坐标；第三个参数b-表示蓝色的实线；linewidth表示线的宽度为2；label表示线的标签
+    ax.plot(x,H_pred[100,:],'r--', linewidth = 2, label = 'Prediction')   #同上
     ax.set_xlabel('$x$') #设置子图的x轴的标签为x
     ax.set_ylabel('$|h(t,x)|$') #设置子图的y轴的标签为|h(t,x)|
     ax.axis('square')   #设置子图的纵横比，使得x轴和y轴的单位长度相等，形成一个正方形的区域
@@ -434,4 +432,4 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     
     savefig('C:/Users/cheny/Documents/GitHub/PINNs/main/continuous_time_inference (Schrodinger)/figures/NLS')  #用来保存图形，将当前图形保存为名为‘NLS’的文件，保存到位置是当前目录下的‘figures’文件夹；这里的路径也要随着设备的情况修改。注意这边来必须提前建立好figures文件夹，否则会报错
     #在文件路径中，"."和".."有特殊的含义。"."表示当前目录，".."表示上一级目录。例如，如果你在"/home/user/documents"目录下，"."就表示"/home/user/documents"，而".."表示"/home/user"。"当前文件夹"通常指的是正在执行的脚本所在的文件夹。在Python中，你可以使用os.getcwd()来获取当前工作目录。
-    print('End')
+    

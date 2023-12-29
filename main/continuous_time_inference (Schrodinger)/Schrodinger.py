@@ -324,7 +324,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     #获取当前时间并赋值给start_time          
     start_time = time.time()       
     #训练模型50000次         
-    model.train(10)
+    model.train(50000)
     #获取当前时间并减去start_time，得到训练时间并赋值给elapsed
     elapsed = time.time() - start_time                
     #打印训练所需时间

@@ -365,7 +365,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     fig, ax = newfig(1.0, 0.9) #这里ax是一个axes对象，代表子图，figure是一个figure对象，是一个图形窗口，代表整个图形
     ax.axis('off') #关闭子图的轴的显示
     
-    ####### Row 0: h(t,x) ##################    
+    ####### Row 0: h(t,x)，绘制第一个子图，展示x,t和|h(t,x)|的关系##################    
     #创建一个包含子图的网格，1行2列
     gs0 = gridspec.GridSpec(1,2)  #创建一个1×2的网络，用于存放子图
     gs0.update(top=1-0.06, bottom=1-1/3, left=0.15, right=0.85, wspace=0) #更新该网络的参数，第一个表示子图的顶部位置为0.94，第二个参数表示子图的底部位置为0.667，第三个表示子图左侧的位置为0.15，第四个参数表示子图的右侧位置为0.85，第五个参数表示子图之间的宽度，0表示子图之间没有空隙
@@ -381,9 +381,9 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     fig.colorbar(h, cax=cax) #使用colorbar方法在新轴上添加了一个颜色条。colorbar 方法接受两个参数：axesimage 对象（h）和新轴（cax）。
     
     ax.plot(X_u_train[:,1], X_u_train[:,0], 'kx', label = 'Data (%d points)' % (X_u_train.shape[0]), markersize = 4, clip_on = False) #在ax上绘制散点图，前两个参数是散点的x坐标和y坐标；kx表示黑色的x（散点形状是x），label是散点的标签，clip_on表示散点可以绘制在轴的边界外
-    
-    line = np.linspace(x.min(), x.max(), 2)[:,None] #生成了一个包含2个等间距的数值的数组，这些数值在 x.min() 到 x.max() 之间。[:,None] 是一个索引操作，用于将一维数组转换为二维数组。
-    #在ax上绘制三条虚线，第一个参数是虚线的x坐标，line是虚线y的坐标，第三个参数是虚线的样式，k表示黑色，--表示虚线，最后一个参数表示虚线的参数是1
+    #在ax图上绘制三条虚线
+    line = np.linspace(x.min(), x.max(), 2)[:,None] #生成了一个包含2个等间距的数值的数组，这些数值在 x.min() 到 x.max() 之间。[:,None] 是一个索引操作，用于将一维数组转换为二维数组。这里其实就是[-5;5]
+    #第一个参数是虚线的x坐标，line是虚线y的坐标，第三个参数是虚线的样式，k表示黑色，--表示虚线，最后一个参数表示虚线的参数是1
     ax.plot(t[75]*np.ones((2,1)),line,'k--',linewidth=1) 
     ax.plot(t[100]*np.ones((2,1)),line,'k--',linewidth=1)
     ax.plot(t[125]*np.ones((2,1)),line,'k--',linewidth=1)    
@@ -406,7 +406,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     #设置ax子图的x轴的标签为x，y轴的标签为|h(t,x)|。这里$x$和$|h(t,x)|$是latex格式的文本，用于生成数学公式
     ax.set_xlabel('$x$')
     ax.set_ylabel('$|h(t,x)|$')    
-    #设置子图的标题，几个子图标题随着t的变化而变化，字体大小为10
+    #设置子图的标题，几个子图标题随着t的变化而变化，字体大小为10 
     ax.set_title('$t=%.2f$' % (t[75]), fontsize = 10)
     ax.axis('square') #设置子图的纵横比，使得x轴和y轴的单位长度相等，形成一个正方形的区域
     ax.set_xlim([-5.1,5.1]) #第一个子图的x轴范围是-5.1到5.1

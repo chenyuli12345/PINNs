@@ -141,8 +141,8 @@ class PhysicsInformedNN:
         #使用tf.Session创建了一个名为tf.sess的会话。接受一个config参数，这是一个tf.ConfigProto对象，用于设置会话的配置选项。这里设置了两个选项：
               #allow_soft_placement：如果设置为True，那么当某些操作无法在GPU上执行时，TensorFlow会自动将它们放在CPU上执行；
               #log_device_placement：如果设置为True，那么在日志中会记录每个节点被安排在哪个设备上执行
-        self.sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=False,
-                                                     log_device_placement=False))
+        self.sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True,
+                                                     log_device_placement=True))
         #使用tf.global_variables_initializer函数创建了一个初始化所有全局变量的操作（Tensorflow中所有变量在使用之前都需要进行初始化）
         init = tf.global_variables_initializer()
         #sess.run是会话的一个方法，用于执行图中的操作或计算张量的值。这里是执行初始化
@@ -288,7 +288,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     N_b = 50
     N_f = 20000
     #定义一个列表layers，其中包含了神经网络的层数和每一层的神经元数量
-    layers = [2, 100, 100000, 100, 100, 2]
+    layers = [2, 100, 100, 100, 100, 2]
     #读取名为NLS.mat的Matlab文件，文件中的数据存储在data变量中。这里的路径也要随着设备的情况修改    
     data = scipy.io.loadmat('C:/Users/cheny/Documents/GitHub/PINNs/main/Data/NLS.mat')
     #从data字典中取出变量tt和x的值，并转换为一维数组（flatten方法），最后tongg[:,None]将一维数组转换为二维数组

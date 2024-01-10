@@ -24,6 +24,11 @@ import time #一个内置模块，用于处理时间相关的操作。
 import matplotlib.gridspec as gridspec #是`matplotlib`库的一个模块，用于创建一个网格布局来放置子图。在`matplotlib`中可以创建一个或多个子图（subplot），每个子图都有自己的坐标轴，并可以在其中绘制图形。`gridspec`模块提供了一个灵活的方式来创建和放置子图。
 from mpl_toolkits.axes_grid1 import make_axes_locatable #`mpl_toolkits.axes_grid1`是`matplotlib`库的一个模块，提供了一些高级的工具来控制matplotlib图形中的坐标轴和颜色条。`make_axes_locatable`是模块中的一个函数，用于创建一个可分割的坐标轴。可以在这个坐标轴的四个方向（上、下、左、右）添加新的坐标轴或颜色条。
 
+#下面两行是指定索引为哪一块的gpu进行训练，这里使用索引为1的，即第二块gpu
+import os
+os.environ["CUDA_VISIBLE_DEVICES"]="1，0"
+
+
 #NumPy和TensorFlow都有自己的随机数生成器，它们是独立的，互不影响。也就是说，设置NumPy的随机数种子不会影响TensorFlow的随机数生成，反之亦然
 np.random.seed(1234) #设置了NumPy的随机数生成器的种子。设置随机数生成器的种子可以确保每次运行程序时，NumPy生成的随机数序列都是一样的。
 tf.set_random_seed(1234) #设置了TensorFlow的随机数生成器的种子。设置随机数生成器的种子可以确保每次运行程序时，TensorFlow生成的随机数序列都是一样的
@@ -136,8 +141,8 @@ class PhysicsInformedNN:
         #使用tf.Session创建了一个名为tf.sess的会话。接受一个config参数，这是一个tf.ConfigProto对象，用于设置会话的配置选项。这里设置了两个选项：
               #allow_soft_placement：如果设置为True，那么当某些操作无法在GPU上执行时，TensorFlow会自动将它们放在CPU上执行；
               #log_device_placement：如果设置为True，那么在日志中会记录每个节点被安排在哪个设备上执行
-        self.sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True,
-                                                     log_device_placement=True))
+        self.sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=False,
+                                                     log_device_placement=False))
         #使用tf.global_variables_initializer函数创建了一个初始化所有全局变量的操作（Tensorflow中所有变量在使用之前都需要进行初始化）
         init = tf.global_variables_initializer()
         #sess.run是会话的一个方法，用于执行图中的操作或计算张量的值。这里是执行初始化
@@ -283,7 +288,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     N_b = 50
     N_f = 20000
     #定义一个列表layers，其中包含了神经网络的层数和每一层的神经元数量
-    layers = [2, 100, 100, 100, 100, 2]
+    layers = [2, 100, 100000, 100, 100, 2]
     #读取名为NLS.mat的Matlab文件，文件中的数据存储在data变量中。这里的路径也要随着设备的情况修改    
     data = scipy.io.loadmat('C:/Users/cheny/Documents/GitHub/PINNs/main/Data/NLS.mat')
     #从data字典中取出变量tt和x的值，并转换为一维数组（flatten方法），最后tongg[:,None]将一维数组转换为二维数组

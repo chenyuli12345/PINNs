@@ -168,8 +168,8 @@ class PhysicsInformedNN:
 
     #定义了一个名为xavier_init的函数/方法，用于初始化神经网络的权重(在神经网络参数初始化中实现，见上面)。这个函数使用了Xavier初始化方法，这是一种常用的权重初始化方法，可以帮助我们在训练深度神经网络时保持每一层的激活值的分布相对稳定。
     def xavier_init(self, size):   #接受一个参数size
-        in_dim = size[0]  #输入维度是size的行数
-        out_dim = size[1]     #输出维度是size的列数
+        in_dim = size[0]  #输入维度是size的第一个数
+        out_dim = size[1]     #输出维度是size的第二个数
         xavier_stddev = np.sqrt(2/(in_dim+out_dim))   #计算标准差
         return tf.Variable(tf.truncated_normal([in_dim, out_dim], stddev=xavier_stddev), dtype=tf.float32) #返回一个变量，类型为32位浮点，初始值为截断正态分布，标准差为xavier_stddev，形状为[in_dim, out_dim]，其中in_dim和out_dim分别是输入维度和输出维度
     

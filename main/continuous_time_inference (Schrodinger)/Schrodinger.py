@@ -317,7 +317,7 @@ if __name__ == "__main__":   #这种模式常常用于在一个Python文件中�
     #从Exact_u中选择N0个对应的行(idx_x对应的行)的第一列元素，最后将这N0个元素赋值给u0
     u0 = Exact_u[idx_x,0:1]
     v0 = Exact_v[idx_x,0:1]
-    #从arange(数组t的行数)中随机选择N_b个数，replace=False表示不允许重复选择，最后将这N_b个数赋值给idx_t
+    #从0~数组t的行数中随机选择N_b个数，replace=False表示不允许重复选择，最后将这N_b个数赋值给idx_t
     idx_t = np.random.choice(t.shape[0], N_b, replace=False)
     #从t中选择N_b个对应的行(idx_t对应的行)，最后将这N_b行赋值给tb
     tb = t[idx_t,:]

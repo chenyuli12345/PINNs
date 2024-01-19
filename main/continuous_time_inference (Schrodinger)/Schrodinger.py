@@ -242,7 +242,7 @@ class PhysicsInformedNN:
 
         start_time = time.time()
         for it in range(nIter):  #进行nIter次训练迭代
-            #每次迭代时传入输入数据，并执行Adam优化器的训练操作
+            #每次迭代时传入输入数据，并先执行Adam优化器的训练操作
                 #sess.run(fetches, feed_dict=None, options=None, run_metadata=None)：该函数用于执行TensorFlow操作或评估Tensor对象。第一个参数表示需要执行的操作或需要评估的Tensor；第二个参数feed_dict是一个字典，用于将数据传递给占位符；其他参数用于控制会话的细节，通常不需要修改
             self.sess.run(self.train_op_Adam, tf_dict)
             # Print，如果迭代次数是10的倍数，那么就计算并打印出当前的迭代次数、损失值和训练时间
@@ -252,8 +252,7 @@ class PhysicsInformedNN:
                 print('It: %d, Loss: %.3e, Time: %.2f' %   
                       (it, loss_value, elapsed))  #打印迭代次数、损失值和训练时间
                 start_time = time.time()  #更新当前时间，为计算下一个10次迭代的运行时间做准备
-        #使用优化器来最小化损失函数，第一个参数表示TensorFlow会话，第二个参数表示将数据传递给占位符的字典，fetches表示要获取的结果（这里只获取了损失函数的值），最后一个参数表示每次优化迭代后调用的回调参数，这里是之前定义的，用来打印损失函数   ？？？？                                                                                                              
-        #？？？
+        #进一步使用L-BFGS-B优化器来最小化损失函数，第一个参数表示TensorFlow会话，第二个参数表示将数据传递给占位符的字典，fetches表示要获取的结果（这里只获取了损失函数的值），最后一个参数表示每次优化迭代后调用的回调参数，这里是之前定义的，用来打印损失函数                                                  
         self.optimizer.minimize(self.sess, 
                                 feed_dict = tf_dict,         
                                 fetches = [self.loss],    
